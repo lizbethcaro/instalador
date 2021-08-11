@@ -1,0 +1,77 @@
+
+drop schema bd_prueba_instalacion;
+create schema bd_prueba_instalacion;
+USE bd_prueba_instalacion;
+
+SHOW DATABASES;
+SHOW TABLES;
+
+-- creacion de base de datos-.
+DROP TABLE IF EXISTS tb_idiomas;
+CREATE TABLE tb_idiomas
+(
+    id TINYINT PRIMARY KEY,
+    idioma NVARCHAR(15) NOT NULL 
+);
+INSERT tb_idiomas VALUES('1', 'ESPAÑOL'),('2','TUCANO'); -- Insertar datos por defecto
+
+----------------------------------------------
+
+DROP TABLE IF EXISTS tb_diccionario;
+CREATE TABLE tb_diccionario
+(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	palabra VARCHAR(60) NOT NULL,
+	palabra_idioma TINYINT NOT NULL, -- Llave foranea
+	traduccion VARCHAR(60) NOT NULL, 
+	traduccion_idioma TINYINT NOT NULL, -- lLave foranra
+	significado VARCHAR(300) NOT NULL
+);
+
+----------------------------------------------
+
+DROP TABLE IF EXISTS tb_vocabularios;
+CREATE TABLE tb_vocabularios
+(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    frase NVARCHAR(200) NOT NULL,  
+    frase_idioma TINYINT NOT NULL, -- llave foranea.
+    traduccion  NVARCHAR(200) NOT NULL,
+    traduccion_idioma TINYINT NOT NULL, -- llave foranea.
+	significado VARCHAR(300) NOT NULL
+);
+
+----------------------------------------------
+
+ALTER TABLE tb_diccionario
+ADD INDEX palabra_idioma_idx(palabra_idioma),
+ADD INDEX traduccion_idioma_idx(traduccion_idioma),
+ADD CONSTRAINT fk_diccionario_palabra_idiomas
+FOREIGN KEY(palabra_idioma)
+REFERENCES tb_idiomas(id)
+ON UPDATE CASCADE
+ON DELETE RESTRICT,
+ADD CONSTRAINT fk_diccionario_traduccion_idiomas
+FOREIGN KEY(traduccion_idioma)
+REFERENCES tb_idiomas(id)
+ON UPDATE CASCADE
+ON DELETE RESTRICT
+
+----------------------------------------------
+
+ALTER TABLE tb_vocabularios
+ADD INDEX frase_idioma_idx(frase_idioma),
+ADD INDEX truduccion_idioma_idx(traduccion_idioma),
+ADD CONSTRAINT fk_vocabulario_frase_idiomas
+FOREIGN KEY(frase_idioma)
+REFERENCES tb_idiomas(id)
+ON UPDATE CASCADE
+ON DELETE RESTRICT,
+ADD CONSTRAINT fk_vocabulario_traduccion_idiomas
+FOREIGN KEY(traduccion_idioma)
+REFERENCES tb_idiomas(id)
+ON UPDATE CASCADE
+ON DELETE RESTRICT
+
+----------------------------------------------
+
